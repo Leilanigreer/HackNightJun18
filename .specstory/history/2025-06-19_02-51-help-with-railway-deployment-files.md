@@ -493,3 +493,70 @@ If you need to remove the `Procfile` (since `nixpacks.toml` takes precedence), l
 
 ---
 
+_**User**_
+
+[stage-0 8/8] RUN --mount=type=cache,id=s/b21147b3-7eb5-4dfa-b7cc-a26395f3fb1f-/root/cache/go-build,target=/root/.cache/go-build go build -o out
+"go build -o out" did not complete successfully: exit code: 127
+
+---
+
+_**Assistant**_
+
+The error message:
+```
+"go build -o out" did not complete successfully: exit code: 127
+```
+means that the `go build` command failed because the `go` executable was **not found** in the build environment. Exit code 127 is the standard Unix code for "command not found".
+
+### Why did this happen?
+- Your `nixpacks.toml` currently only installs Node.js (for `npm`), but **does not install Go**.
+- Nixpacks tries to build your Go app, but Go is not available in the environment, so the build fails.
+
+---
+
+## **How to Fix**
+
+You need to tell Nixpacks to install both **Node.js** and **Go**.  
+Update your `nixpacks.toml` to include Go in the `nixPkgs` list:
+
+```toml
+[phases.setup]
+nixPkgs = ["nodejs", "go"]
+
+[phases.install]
+cmds = ["npm install -g @hypermode/modus-cli"]
+
+[start]
+cmd = "modus dev"
+```
+
+---
+
+Would you like me to make this change for you?
+
+---
+
+_**User**_
+
+Yes, fix it 
+
+---
+
+_**Assistant**_
+
+```diff
+  [phases.setup]
+- nixPkgs = ["nodejs"]
++ nixPkgs = ["nodejs", "go"]
+  
+  [phases.install]
+```
+
+---
+
+Your `nixpacks.toml` is now updated to install **both Node.js and Go** in the build environment. This will resolve the "go build ... exit code: 127" error and allow your app to build and run on Railway.
+
+You
+
+---
+

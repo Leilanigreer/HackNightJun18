@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["nodejs"]
+nixPkgs = ["nodejs", "go"]
 
 [phases.install]
 cmds = ["npm install -g @hypermode/modus-cli"]
